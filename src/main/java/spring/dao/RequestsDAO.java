@@ -44,7 +44,7 @@ public class RequestsDAO {
 	}
 
 	public List getObjects(){return new ArrayList(StorageObject.readAll());}
-	public List getReqs(){
+	public List<Request> getReqs(){
 		if(StorageUsers.curId == 0)
 			return new ArrayList(StorageReq.readAll());
 		else return new ArrayList(StorageReq.readAllOfUser());
@@ -72,7 +72,7 @@ public class RequestsDAO {
 	}
 
 	public Request getReq(int id){
-		for(Request c : Requests){
+		for(Request c : getReqs()){
 			if(c.getId().equals(id))
 				return c;
 		}
@@ -81,7 +81,7 @@ public class RequestsDAO {
 
 	public Request updateReq(Request Request) {
 
-		for (Request c : Requests) {
+		for (Request c : getReqs()) {
 			if (c.getId().equals(Request.getId())) {
 				try {
 					StorageReq.update(Request);
