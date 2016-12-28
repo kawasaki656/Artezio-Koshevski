@@ -27,12 +27,6 @@ mod.controller('control',function($scope,$resource,Res,Dic)
 	//Объект инкассации
 	$scope.objIncas = {};
 
-	$scope.redirect = function(){
-		var redir = $resource(Res.user,Res.userParam);
-		redir.save({user:"1",pass:"1"});
-		location.href = "http://localhost:8080/authorization/user/1/pass/1";
-	}
-
 	/* Отправка заявки на инкассацию */
 	$scope.submitNewRequest = function(){
 
