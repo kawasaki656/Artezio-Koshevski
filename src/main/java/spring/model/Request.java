@@ -1,31 +1,95 @@
-package spring.model;
+package spring.model; /**
+ * Created by Саша on 02.01.2017.
+ */
+
+import spring.model.ObjectIncas;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Саша on 25.12.2016.
  */
-public class Request {
+@Entity
+@Table(name="requests")
+public class Request implements Serializable{
+
+    @Id
+    @GenericGenerator(name="inc" , strategy="increment")
+    @GeneratedValue(generator="inc")
+    @Column(name="id")
     private int id;
+
+    @OneToMany(mappedBy = "r")
+    private Set<ObjectIncas> objectIncases = new HashSet<ObjectIncas>();
+
+    @ManyToOne
+    @JoinColumn(name="user",insertable = false, updatable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private User u;
+
+    @Column(name="bank")
     private String bank;
+
+    @Column(name="inn")
     private String inn;
+
+    @Column(name="kpp")
     private String kpp;
+
+    @Column(name="nameOrganization")
     private String nameOrganization;
+
+    @Column(name="ogrn")
     private String ogrn;
+
+    @Column(name="nameEmploye")
     private String nameEmploye;
+
+    @Column(name="telephoneEmploye")
     private String telephoneEmploye;
+
+    @Column(name="bankDetails")
     private String bankDetails;
+
+    @Column(name="accountNumber")
     private String accountNumber;
+
+    @Column(name="bik")
     private String bik;
+
+    @Column(name="bankNumber")
     private String bankNumber;
+
+    @Column(name="nameBank")
     private String nameBank;
+
+    @Column(name="swift")
     private String swift;
 
     //скрытые
+    @Column(name="date")
     private String date;
+
+    @Column(name="status")
     private String status;
+
+    @Column(name="type")
     private String type;
 
-    public Request(int id, String bank, String inn, String kpp, String nameOrganization, String ogrn, String nameEmploye, String telephoneEmploye, String bankDetails, String accountNumber, String bik, String bankNumber, String nameBank, String swift) {
-        this.id = id;
+    @Column(name="user")
+    private int user;
+
+    public Request(){
+
+    }
+
+    public Request(String bank, String inn, String kpp, String nameOrganization, String ogrn, String nameEmploye, String telephoneEmploye, String bankDetails, String accountNumber, String bik, String bankNumber, String nameBank, String swift,int user) {
         this.bank = bank;
         this.inn = inn;
         this.kpp = kpp;
@@ -39,6 +103,7 @@ public class Request {
         this.bankNumber = bankNumber;
         this.nameBank = nameBank;
         this.swift = swift;
+        this.user = user;
     }
 
     public void addHidden(String date, String status, String type)
@@ -46,6 +111,32 @@ public class Request {
         this.date = date;
         this.status = status;
         this.type = type;
+    }
+
+
+
+    public User getU() {
+        return u;
+    }
+
+    public void setU(User u) {
+        this.u = u;
+    }
+
+    public int getUser() {
+        return user;
+    }
+
+    public void setUser(int user) {
+        this.user = user;
+    }
+
+    public Set<ObjectIncas> getObjectIncases() {
+        return objectIncases;
+    }
+
+    public void setObjectIncases(Set<ObjectIncas> objectIncases) {
+        this.objectIncases = objectIncases;
     }
 
     public String getDate() {

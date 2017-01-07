@@ -1,7 +1,10 @@
 package spring.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 import spring.model.User;
-import spring.storage.StorageUsers;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,12 +19,36 @@ import java.util.List;
  */
 @Controller
 public class Index {
+/*
+    @Autowired
+    private UsersDAO users;
 
     @CrossOrigin
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String getjsp(){
 
         return StorageUsers.curUser;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    public String doLogin(){
+
+        users.addUser(new User(1,"sasha","koshevski","123"));
+        return "index";
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/count",method = RequestMethod.GET)
+    public String getCount(){
+
+        return users.getCount()+"";
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/registration",method = RequestMethod.POST)
+    public String registration(@RequestBody String s){
+        return s;
     }
 
 
@@ -59,5 +86,5 @@ public class Index {
         }
 
 
-    }
+    }*/
 }
