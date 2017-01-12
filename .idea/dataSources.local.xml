@@ -7,11 +7,5 @@
       <schema-pattern>collection.*</schema-pattern>
       <default-schemas>collection.*</default-schemas>
     </data-source>
-    <data-source name="MySQL - collection@localhost [2]" uuid="5a4f2a17-71e9-46eb-9375-da86375c3720">
-      <secret-storage>master_key</secret-storage>
-      <user-name>name</user-name>
-      <schema-pattern>collection.*</schema-pattern>
-      <default-schemas>collection.*</default-schemas>
-    </data-source>
   </component>
 </project>

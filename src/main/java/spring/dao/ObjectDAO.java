@@ -3,7 +3,7 @@ package spring.dao;
 import org.hibernate.Hibernate;
 import spring.DAO_interface.Object;
 import org.hibernate.Session;
-import spring.utils.HybernateUtil;
+import spring.utils.HibernateUtil;
 import spring.model.ObjectIncas;
 
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class ObjectDAO implements Object {
     public List<ObjectIncas> all(){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<ObjectIncas> result = session.createQuery("from ObjectIncas").list();
 
@@ -25,7 +25,7 @@ public class ObjectDAO implements Object {
     }
 
     public ObjectIncas get(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         ObjectIncas result = (ObjectIncas) session.get(ObjectIncas.class,id);
         session.getTransaction().commit();
@@ -33,7 +33,7 @@ public class ObjectDAO implements Object {
     }
 
     public void add(ObjectIncas o){
-        Session session = HybernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.save(o);
 
@@ -51,7 +51,7 @@ public class ObjectDAO implements Object {
     }
 
     public void delete(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.delete(session.get(ObjectIncas.class,id));
         session.getTransaction().commit();

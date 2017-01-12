@@ -13,7 +13,7 @@ import spring.model.Request;
 import spring.model.User;
 
 
-public class HybernateUtil {
+public class HibernateUtil {
 
 
     private static SessionFactory sessionFactory;

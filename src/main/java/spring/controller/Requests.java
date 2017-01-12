@@ -23,6 +23,19 @@ public class Requests {
     private UserDAO users = new UserDAO();
     private RequestDAO reqs = new RequestDAO();
     private ObjectDAO objs = new ObjectDAO();
+
+    @CrossOrigin
+    @GetMapping("requests")
+    public List<Request> getAllRequests(){
+        return reqs.all();
+    }
+
+    @CrossOrigin
+    @PutMapping("requests/id/{id}/status")
+    public void signRequest(@PathVariable int id){
+        reqs.signRequest(id);
+    }
+
     @CrossOrigin
     @GetMapping("requests/session/{session}")
     public ResponseEntity getUserRequests(@PathVariable("session") String session){

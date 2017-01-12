@@ -20,16 +20,25 @@ import spring.requests.Login;
 @Controller
 public class Users {
 
-    ObjectDAO objects = new ObjectDAO();
     UserDAO users = new UserDAO();
+
+    @CrossOrigin
+    @RequestMapping(value = "/dictionaries",method = RequestMethod.GET)
+    public String dictionaries(@CookieValue(value = "session",required = false) String cookie){
+        if(users.typeSession(cookie).equals("admin"))
+            return "dictionaries";
+        else return "not found";
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String main(@CookieValue(value = "session",required = false) String cookie){
         if(cookie == null || cookie.equals("0"))
             return "registration";
-        else if(users.existSession(cookie))
-            return "res";
+        else if(users.typeSession(cookie).equals("user"))
+            return "user";
+        else if(users.typeSession(cookie).equals("admin"))
+            return "admin";
         return "error";
     }
 
@@ -54,7 +63,7 @@ public class Users {
     @CrossOrigin
     @RequestMapping(value = "/registration",method = RequestMethod.POST)
     public void registration(@RequestBody Registration req){
-        User tmp = new User(req.getLogin(),req.getPass(),"0");
+        User tmp = new User(req.getLogin(),req.getPass(),"0","user");
         users.add(tmp);
     }
     

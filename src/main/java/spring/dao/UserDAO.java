@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import spring.model.User;
-import spring.utils.HybernateUtil;
+import spring.utils.HibernateUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -17,14 +17,14 @@ import java.util.Set;
 public class UserDAO implements spring.DAO_interface.User {
 
     public void add(spring.model.User user) {
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.save(user);
         session.getTransaction().commit();
     }
 
     public User get(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         User result = session.get(User.class,id);
         session.getTransaction().commit();
@@ -32,7 +32,7 @@ public class UserDAO implements spring.DAO_interface.User {
     }
 
     public int getIdByName(String name){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         String hql = "FROM User U WHERE U.login = :user_login";
         Query query = session.createQuery(hql);
@@ -43,7 +43,7 @@ public class UserDAO implements spring.DAO_interface.User {
     }
 
     public Set<Request> getRequests(String id_ses) {
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         String hql = "FROM User U WHERE U.session = :user_session";
 
@@ -64,7 +64,7 @@ public class UserDAO implements spring.DAO_interface.User {
         if(id_ses.equals("0"))
             return false;
         else {
-            Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             session.beginTransaction();
             String hql = "FROM User U WHERE U.session = :user_session";
 
@@ -78,8 +78,23 @@ public class UserDAO implements spring.DAO_interface.User {
         }
     }
 
+    public String typeSession(String id_ses){
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            String hql = "FROM User U WHERE U.session = :user_session";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("user_session", id_ses);
+
+            List<spring.model.User> user = query.list();
+            session.getTransaction().commit();
+            if(user.isEmpty())
+                return "error";
+            else return user.get(0).getRole();
+    }
+
     public boolean updateSession(String login, String pass, String ses) {
-        Session session = HybernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List<spring.model.User> all = session.createQuery("from spring.model.User").list();
         Hibernate.initialize(all);
@@ -103,7 +118,7 @@ public class UserDAO implements spring.DAO_interface.User {
     }
 
     public boolean exitSession(String ses) {
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<spring.model.User> all = session.createQuery("from spring.model.User").list();
         Hibernate.initialize(all);

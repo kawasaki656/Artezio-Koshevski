@@ -49,14 +49,13 @@
 	</script>
 </head>
 <body ng-controller="user">
-	<span class="glyphicons glyphicons-pencil"></span>
 	<div class="container">
 		<nav class="navbar navbar-default">
   			<div class="container-fluid" id="menu">
 
-    			<div class="navbar-header" >
+    			<div class="navbar-header" style="padding-top: 15px">
 		
-      				<a class="navbar-brand" href="/" id="rreg"><span class="glyphicon glyphicon-pencil"></span> Регистрация заявок на инкассацию </a>
+      				<a class="rreg" href="/" id="rreg"><span class="glyphicon glyphicon-pencil"></span> Регистрация заявок на инкассацию </a>
 	  
     			</div>
 				<form class="navbar-form navbar-right" ng-submit="logout()">
@@ -101,7 +100,7 @@
 				</tr>
 				</thead>
 				<tbody id="tableRequests">
-				<tr ng-repeat="Request in requests | filter:byRange('date', min, max) | orderBy:'id':sortReverse" ng-click="clickRow(Request)">
+				<tr ng-repeat="Request in requests | filter:byRange('date', min, max) | orderBy:'id':sortReverse" ng-click="clickRow(Request)" ng-class="suc(Request)">
 					<td>{{Request.id }}</td>
 					<td>{{Request.date}}</td>
 					<td>{{Request.status}}</td>
@@ -230,6 +229,38 @@
 				  </div>
 			  </div>
 		  </form>
+
+
+			<div class="panel-group" style="margin-top:10px">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse4">Объекты <span class="glyphicon glyphicon-chevron-right"></span></a>
+						</h4>
+					</div>
+					<div id="collapse4" class="panel-collapse collapse">
+
+						<div class="panel-body">
+							<div class="col-sm-4" ng-repeat="obj in objects" style="margin-bottom:30px">
+								<p class="control-label col-sm-12" style="text-align:left;font-size:12pt">Добавленный объект</p>
+								<div class="col-sm-12" style="border-top:1px dotted gray;padding-top:10px">
+									<p><b>Желательное время сдачи наличных: </b>{{obj.time}}</p>
+									<p><b>Способ сдачи денежной наличности: </b>{{obj.typeOfPutting}}</p>
+									<p><b>Переодичность оказания услуг: </b>{{obj.periodOfService}}</p>
+									<p><b>День недели: </b>{{obj.dayOfWeek}}</p>
+									<p><b>Предполагаемый оъем денежной наличности: </b>{{obj.countOfMoney}}</p>
+									<p><b>Код валюты: </b>{{obj.codeOfCurrency}}</p>
+									<p><b>Руководитель объекта: </b>{{obj.telephoneHead}}</p>
+									<p><b>Желательная дата начала обслуживания: </b>{{obj.date}}</p>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 
 <!--	!!!!! Добавить объект инкассации !!!!!	-->
@@ -243,15 +274,13 @@
 				<div class="form-group">
 					  <label class="control-label col-sm-2">Желательное время сдачи наличных:</label>
 					  <div class="col-sm-4">
-						<input class="form-control" type="time" ng-model="time" required></input>
+						<input class="form-control" type="time" ng-model="time" required/>
 					  </div>
 
 					  <label class="control-label col-sm-2">Способ сдачи денежной наличности:</label>
 					  <div class="col-sm-4">
 							<select class="form-control"  ng-model="typeOfPutting" data-toggle="tooltip">
-								<option>По объявлению на взнос наличными</option>
-								<option>В инкассаторских сумках</option>
-								<option>Через службу инкассации</option>
+								<option ng-repeat="cent in money">{{cent.value}}</option>
 							</select>
 					  </div>
 				</div>
@@ -260,12 +289,7 @@
 					  <label class="control-label col-sm-2" >Переодичность оказания услуг:</label>
 						  <div class="col-sm-4">
 							<select class="form-control"  ng-model="periodOfService" >
-								<option>Ежедневно</option>
-								<option>Рабочие дни</option>
-								<option>Через день</option>
-								<option>День недели</option>
-								<option>По заявке</option>
-								<option>По звонку</option>
+								<option ng-repeat="period in periods">{{period.value}}</option>
 							</select>
 						  </div>
 
@@ -312,25 +336,6 @@
 						<input class="form-control btn-success" type="submit" value="Добавить" />
 					  </div>
 				</div>
-
-				<div class="form-group" style="margin-top:10px">
-					<div class="panel-group">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h4 class="panel-title">
-									<a data-toggle="collapse" href="#collapse1">Добавленные объекты <span class="glyphicon glyphicon-chevron-right"></span></a>
-								</h4>
-							</div>
-							<div id="collapse1" class="panel-collapse collapse">
-								<div class="panel-body">
-									<p ng-repeat="obj in objects"><b>Руководитель: </b> {{obj.telephoneHead}}, <b>примерный объем сдачи: </b> {{obj.countOfMoney}}, <b>с переодичностью: </b> {{obj.periodOfService}}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
 
 			</form>
 		</div>

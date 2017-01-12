@@ -24,10 +24,11 @@ public class User implements Serializable{
 
     }
 
-    public User(String login, String pass, String session){
+    public User(String login, String pass, String session, String role){
         this.login = login;
         this.pass = pass;
         this.session = session;
+        this.role = role;
     }
 
     @Id
@@ -44,6 +45,17 @@ public class User implements Serializable{
 
     @Column(name="session")
     private String session;
+
+    @Column(name="role")
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public int getId() {
         return id;

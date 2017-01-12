@@ -37,6 +37,10 @@
         <mapping class="spring.model.Request"/>
         <mapping class="spring.model.ObjectIncas"/>
         <mapping class="spring.model.User"/>
+        <mapping class="spring.model.dictionaries.IncasService"/>
+        <mapping class="spring.model.dictionaries.PeriodService"/>
+        <mapping class="spring.model.dictionaries.TypeRequest"/>
+        <mapping class="spring.model.dictionaries.TypeSendMoney"/>
 
     </session-factory>
 

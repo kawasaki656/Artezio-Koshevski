@@ -1,7 +1,24 @@
 ﻿var mod = angular.module('app',['ngResource']);
   mod.controller('user',["$scope","$resource",function($scope,$resource, Res)
   {
+	  /* START Статус подписана */
+	  $scope.suc = function(Request){
 
+		  if(Request.status == "Подписана")
+			  return "success";
+	  };
+	  /* END Статус подписана */
+	  
+	  /* START Справочник способ сдачи денежной наличности */
+	  var money = document.location + "dictionaries/money";
+	  $scope.money = $resource(money).query();
+	  /* END Справочник способ сдачи денежной наличности */
+
+	  /* START Справочник переодичность оказания услуг */
+	  var period = document.location + "dictionaries/period";
+	  $scope.periods = $resource(period).query();
+	  /* END Справочник переодичность оказания услуг */
+	  
 	  /* START Поиск по дате и инициализация даты */
 	  var minDate = new Date();
 	  minDate.setDate(1);
@@ -16,13 +33,8 @@
 		  var minDate = Date.parse(minValue);
 		  var maxDate = Date.parse(maxValue);
 		  var curDate = new Date();
-
-
-
-
+		  
 		  return function predicateFunc(item) {
-
-
 			  curDate.setDate(item[fieldName].slice(1,2));
 			  curDate.setMonth(item[fieldName].slice(4,5)-1);
 			  curDate.setFullYear(item[fieldName].slice(7,10));
@@ -74,6 +86,7 @@
 		  $scope.bankNumber = req.bankNumber;
 		  $scope.nameBank = req.nameBank;
 		  $scope.swift = req.swift;
+		  $scope.status = req.status;
 
 		  var objects = document.location + "requests/objects/id/:id";
 		  var objectsParam = {id:"@id"};
@@ -82,7 +95,7 @@
 	  }
 	  /* END Клик по строке формы */
 
-	  /* START Клик + */
+	  /* START Клик Новая заявка */
 	  $scope.addReq = function(){
 		  var nameBank = document.getElementById("nameBank");
 		  $scope.bank = nameBank.text;
@@ -91,7 +104,7 @@
 		  x.remove(2);
 		  $scope.selectedItem = "Добавить";
 	  }
-	  /* END Клик + */
+	  /* END Клик Новая заявка */
 
 
 	  /* START Отправка объекта инкассации */
@@ -130,68 +143,79 @@
 	  }
 
 	  /* START Отправка заявки */
-	  $scope.submitNewRequest = function(){
-	
-		  var req = $resource(document.location + "requests");
-		  var reqUpd = $resource(document.location + "requests/id/:id",{id:"@id"},{save:{method:'PUT'}});
-		  var reqDel = $resource(document.location + "requests/user/:user/id/:id",{user:"@user",id:"@id"},{remove:{method:'DELETE'}});
-		  var user = $resource(
-			  document.location + 'login/id', {}, {
-				  get: {
-					  method: 'GET',
-					  transformResponse: function(data, headers){
-						  //MESS WITH THE DATA
-						  response = {}
-						  response.data = data;
-						  response.headers = headers();
-						  return response;
+	  $scope.submitNewRequest = function() {
+		  if ($scope.status == "Подписана") {
+			  alert("Заявка уже подписана, изменить данные нельзя")
+			  location.href = location.href;
+		  }
+		  else {
+			  var req = $resource(document.location + "requests");
+			  var reqUpd = $resource(document.location + "requests/id/:id", {id: "@id"}, {save: {method: 'PUT'}});
+			  var reqDel = $resource(document.location + "requests/user/:user/id/:id", {
+				  user: "@user",
+				  id: "@id"
+			  }, {remove: {method: 'DELETE'}});
+			  var user = $resource(
+				  document.location + 'login/id', {}, {
+					  get: {
+						  method: 'GET',
+						  transformResponse: function (data, headers) {
+							  //MESS WITH THE DATA
+							  response = {}
+							  response.data = data;
+							  response.headers = headers();
+							  return response;
+						  }
 					  }
 				  }
-			  }
+			  );
+			  var userId;
 
-		  );
-		  var userId;
-
-			  user.get(function(data){
-				  userId=data.data;
+			  user.get(function (data) {
+				  userId = data.data;
 				  //POST
-				  if($scope.selectedItem == "Добавить")
-					  req.save({bank:$scope.bank, inn:$scope.inn, kpp:$scope.kpp, nameOrganization:$scope.nameOrganization, ogrn:$scope.ogrn,
-						  nameEmploye:$scope.nameEmploye, telephoneEmploye:$scope.telephoneEmploye, bankDetails:$scope.bankDetails,
-						  accountNumber:$scope.accountNumber, bik:$scope.bik, bankNumber:$scope.bankNumber, nameBank:$scope.nameBank,
-						  swift:$scope.swift,user:userId});
+				  if ($scope.selectedItem == "Добавить")
+					  req.save({
+						  bank: $scope.bank,
+						  inn: $scope.inn,
+						  kpp: $scope.kpp,
+						  nameOrganization: $scope.nameOrganization,
+						  ogrn: $scope.ogrn,
+						  nameEmploye: $scope.nameEmploye,
+						  telephoneEmploye: $scope.telephoneEmploye,
+						  bankDetails: $scope.bankDetails,
+						  accountNumber: $scope.accountNumber,
+						  bik: $scope.bik,
+						  bankNumber: $scope.bankNumber,
+						  nameBank: $scope.nameBank,
+						  swift: $scope.swift,
+						  user: userId
+					  });
 				  //PUT
-				  if($scope.selectedItem == "Изменить")
-					  reqUpd.save({id:$scope.curReq.id},{bank:$scope.bank, inn:$scope.inn, kpp:$scope.kpp, nameOrganization:$scope.nameOrganization, ogrn:$scope.ogrn,
-						  nameEmploye:$scope.nameEmploye, telephoneEmploye:$scope.telephoneEmploye, bankDetails:$scope.bankDetails,
-						  accountNumber:$scope.accountNumber, bik:$scope.bik, bankNumber:$scope.bankNumber, nameBank:$scope.nameBank,
-						  swift:$scope.swift,user:userId});
+				  if ($scope.selectedItem == "Изменить")
+					  reqUpd.save({id: $scope.curReq.id}, {
+						  bank: $scope.bank,
+						  inn: $scope.inn,
+						  kpp: $scope.kpp,
+						  nameOrganization: $scope.nameOrganization,
+						  ogrn: $scope.ogrn,
+						  nameEmploye: $scope.nameEmploye,
+						  telephoneEmploye: $scope.telephoneEmploye,
+						  bankDetails: $scope.bankDetails,
+						  accountNumber: $scope.accountNumber,
+						  bik: $scope.bik,
+						  bankNumber: $scope.bankNumber,
+						  nameBank: $scope.nameBank,
+						  swift: $scope.swift,
+						  user: userId
+					  });
 				  //DELETE
-				  if($scope.selectedItem == "Удалить")
-					  reqDel.remove({user:userId,id:$scope.curReq.id});
+				  if ($scope.selectedItem == "Удалить")
+					  reqDel.remove({user: userId, id: $scope.curReq.id});
 				  location.href = location.href;
 			  })
-		  
 
-
-
-		  /*
-		   //PUT
-		   if($scope.selectedItem == "Изменить"){
-
-		   var req = $resource(Res.req,Res.reqParam,{save:{method:'PUT'}});
-		   req.save({id:$scope.curReq.id, bank:$scope.bank, inn:$scope.inn, kpp:$scope.kpp, nameOrganization:$scope.nameOrganization, ogrn:$scope.ogrn, nameEmploye:$scope.nameEmploye, telephoneEmploye:$scope.telephoneEmploye, bankDetails:$scope.bankDetails, accountNumber:$scope.accountNumber, bik:$scope.bik, bankNumber:$scope.bankNumber, nameBank:$scope.nameBank, swift:$scope.swift});
-		   location.href=location.href
-		   }
-
-		   //DELETE
-		   if($scope.selectedItem == "Удалить"){
-
-		   var req = $resource(Res.reqId,Res.reqIdParam);
-		   req.delete({id:$scope.curReq.id});
-		   location.href=location.href
-		   }
-		   */
+		  }
 	  }
 	  /* END Отправка заявки */
 }])

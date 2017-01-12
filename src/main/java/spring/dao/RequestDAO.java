@@ -4,7 +4,7 @@ import spring.model.ObjectIncas;
 import spring.model.Request;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import spring.utils.HybernateUtil;
+import spring.utils.HibernateUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,33 +16,44 @@ import java.util.Set;
 public class RequestDAO implements spring.DAO_interface.Request {
 
     public List<Request> all(){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<Request> result = session.createQuery("from Request").list();
 
-        // Насильная инициализация списка. Не очень хорошая практика так делать
-        Hibernate.initialize(result);
+        for(Request req:result)
+        {
+            req.setObjectIncases(null);
+            req.setU(null);
+        }
         session.getTransaction().commit();
         return result;
     }
 
     public Request get(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Request result = session.get(Request.class,id);
         session.getTransaction().commit();
         return result;
     }
 
+    public void signRequest(int id){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Request result = session.get(Request.class,id);
+        result.setStatus("Подписана");
+        session.getTransaction().commit();
+    }
+
     public void add(Request r){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.save(r);
         session.getTransaction().commit();
     }
 
     public void update(spring.requests.Request r, int id, String date, String status, String type ) {
-        Session session = HybernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List<spring.model.Request> all = session.createQuery("from spring.model.Request").list();
         Hibernate.initialize(all);
@@ -75,7 +86,7 @@ public class RequestDAO implements spring.DAO_interface.Request {
     }
 
     public void delete(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.delete(session.get(Request.class,id));
 
@@ -83,7 +94,7 @@ public class RequestDAO implements spring.DAO_interface.Request {
     }
 
     public Set<ObjectIncas> getObjects(int id){
-        Session session = HybernateUtil.getSessionFactory().getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Request tmp = session.get(Request.class,id);
         Set<ObjectIncas> result = tmp.getObjectIncases();

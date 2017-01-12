@@ -1,9 +1,9 @@
 var mod = angular.module('app',['ngResource']);
   mod.controller('user',["$scope","$resource",function($scope,$resource, Res)
   {
-	  var ResReg = $resource(document.location + "registration");
+	  var ResReg = $resource(document.location + "/registration");
 	  var ResLogin = $resource(
-          document.location + 'login', {}, {
+          document.location + '/login', {}, {
         save: {
             method: 'POST',
             transformResponse: function(data, headers){
@@ -16,9 +16,7 @@ var mod = angular.module('app',['ngResource']);
     }
 
     );
-
-
-
+      
       /* START Авторизация */
 	  $scope.registration = function(){
           if($scope.pass == $scope.pass2)
